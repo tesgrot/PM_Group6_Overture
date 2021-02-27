@@ -1,0 +1,52 @@
+class World
+
+values
+
+operations
+
+	public Scenario1 : () ==> bool
+	Scenario1() == (
+		MySystem`arm.MotorOn();
+		MySystem`arm.Step(4);
+		MySystem`arm.MotorOff();
+		return true;
+	);
+	
+	public Scenario2 : () ==> bool
+	Scenario2() == (
+		MySystem`arm.MotorOn();
+		MySystem`arm.Step(6);
+		MySystem`arm.SwitchTorque(); -- t = -1 * t
+		MySystem`arm.Step(3);
+		MySystem`arm.SwitchTorque();
+		MySystem`arm.Step(1);
+		MySystem`arm.MotorOff();
+		return true;
+	);
+	
+	public Scenario3 : () ==> bool
+	Scenario3() == (
+		MySystem`arm.MotorOn();--1
+		MySystem`arm.Step(6);--2
+		MySystem`arm.SwitchTorque();--3
+		MySystem`arm.Step(3);--4
+		MySystem`arm.SwitchTorque();--5
+		MySystem`arm.Step(2);--6
+		MySystem`arm.SwitchTorque();--7
+		MySystem`arm.Step(2);--8
+		MySystem`arm.SwitchTorque();--9
+		MySystem`arm.Step(3);--10
+		MySystem`arm.Step(2);--11
+		MySystem`arm.MotorOff();--12
+		return true;
+	);
+	
+	public Scenario4 : () ==> bool
+	Scenario4() == (
+		MySystem`arm.MotorOn();
+		MySystem`arm.Step(10);
+		return true;
+	);
+	
+
+end World
