@@ -1,0 +1,134 @@
+class World
+
+instance variables
+	io : IO := new IO();
+
+values
+
+operations
+	
+	public echoLabels : () ==> ()
+	echoLabels() == (
+		dcl str : seq of char := "inst\tnow\tenv_m_s\tenv_t\tenv_q\tctl_m_s\tctl_t\tctl_q\n";
+		def - = io.echo(str) in skip;
+	);
+	
+	public echoState : (nat) ==> ()
+	echoState(counter) == (
+		dcl str : seq of char := "";
+		str := str ^ VDMUtil`val2seq_of_char[nat](counter);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`arm.now);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[nat](
+			MySystem`arm.env_motor_state);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`arm.env_t);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`arm.env_q);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[nat](
+			MySystem`controller.ctl_motor_state);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`controller.ctl_t);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`controller.ctl_q);
+		str := str ^ "\n";
+		def - = io.echo(str) in skip;
+	);
+	
+	public Scenario1 : () ==> bool
+	Scenario1() == (
+		echoLabels();
+		echoState(0);
+		MySystem`controller.MotorOn();
+		echoState(1);
+		MySystem`arm.Step(4);
+		echoState(2);
+		MySystem`controller.MotorOff();
+		echoState(3);
+		return true;
+	);
+
+	public Scenario2 : () ==> bool
+	Scenario2() == (
+		echoLabels();
+		echoState(0);
+		MySystem`controller.MotorOn();
+		echoState(1);
+		MySystem`arm.Step(6);
+		echoState(2);
+		MySystem`controller.SwitchTorque();
+		echoState(3);
+		MySystem`arm.Step(3);
+		echoState(4);
+		MySystem`controller.SwitchTorque();
+		echoState(5);
+		MySystem`arm.Step(1);
+		echoState(6);
+		MySystem`controller.MotorOff();
+		echoState(7);
+		return true;
+	);
+	
+	public Scenario3 : () ==> bool
+	Scenario3() == (
+		echoLabels();
+		echoState(0);
+		MySystem`controller.MotorOn();--1
+		echoState(1);
+		MySystem`arm.Step(6);--2
+		echoState(2);
+		MySystem`controller.SwitchTorque();--3
+		echoState(3);
+		MySystem`arm.Step(3);--4
+		echoState(4);
+		MySystem`controller.SwitchTorque();--5
+		echoState(5);
+		MySystem`arm.Step(2);--6
+		echoState(6);
+		MySystem`controller.SwitchTorque();--7
+		echoState(7);
+		MySystem`arm.Step(2);--8
+		echoState(8);
+		MySystem`controller.SwitchTorque();--9
+		echoState(9);
+		MySystem`arm.Step(3);--10
+		echoState(10);
+		MySystem`arm.Step(2);--11
+		echoState(11);
+		MySystem`controller.MotorOff();--12
+		echoState(12);
+		return true;
+	);
+	
+	public Scenario4 : () ==> bool
+	Scenario4() == (
+		echoLabels();
+		echoState(0);
+		MySystem`controller.MotorOn();
+		echoState(1);
+		MySystem`arm.Step(10);
+		echoState(2);
+		return true;
+	);
+	
+	public Scenario5 : () ==> bool
+	Scenario5() == (
+		echoLabels();
+		MySystem`controller.MotorOn();
+		MySystem`arm.Step(4);
+		echoState(0); -- Controller did not monitor the angle yet
+		MySystem`controller.MonitorAngle(); -- ctl monitors q from env
+		echoState(1);
+		MySystem`controller.MotorOff();
+		echoState(2);
+		return true;
+	);
+
+end World

@@ -1,0 +1,42 @@
+class Robot_Controller
+
+instance variables
+	
+	public ctl_t: real;
+	public ctl_q: real;
+	public ctl_motor_state: nat;
+	
+operations
+	
+	public Robot_Controller: () ==> Robot_Controller
+	Robot_Controller() == (
+		ctl_motor_state := 0;
+		ctl_t := 0.1;
+		ctl_q := 0;
+	);
+	
+	public MonitorAngle: () ==> ()
+	MonitorAngle() == duration (0) (
+		ctl_q := MySystem`arm.env_q;
+	);
+
+	public MotorOn: () ==> ()
+	MotorOn() == duration (0) (
+		ctl_motor_state := 1;
+		MySystem`arm.env_motor_state := 1;
+	);
+	
+	public MotorOff: () ==> ()
+	MotorOff() == duration (0) (
+		ctl_motor_state := 0;
+		MySystem`arm.env_motor_state := 0;
+	);
+	
+	public SwitchTorque: () ==> ()
+	SwitchTorque() == duration (0) (
+		ctl_t := -1 * ctl_t;
+		MySystem`arm.env_t := -1 * MySystem`arm.env_t;
+	);
+	
+
+end Robot_Controller
