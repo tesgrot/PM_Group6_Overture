@@ -1,7 +1,0 @@
-system MySystem
-
-instance variables
-
-	public static arm:Robot_Arm := new Robot_Arm();
-
-end MySystem
