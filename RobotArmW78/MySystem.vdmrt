@@ -1,0 +1,20 @@
+system MySystem
+
+instance variables
+
+	public static arm:Robot_Arm := new Robot_Arm();
+	public static controller:Robot_Controller := new Robot_Controller();
+	
+	cpu1 : CPU := new CPU(<FP>, 1E2);
+	cpu2 : CPU := new CPU(<FP>, 1E2);
+	
+	bus1 : BUS := new BUS(<CSMACD>, 72E3, {cpu1, cpu2})
+	
+operations
+	public MySystem: () ==> MySystem
+	MySystem() == (
+		cpu1.deploy(arm);
+		cpu2.deploy(controller);
+	);
+
+end MySystem

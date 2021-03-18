@@ -1,0 +1,64 @@
+class Robot_Controller
+
+instance variables
+	
+	public ctl_t: real;
+	public ctl_q: real;
+	public ctl_motor_state: nat;
+	
+operations
+	
+	public Robot_Controller: () ==> Robot_Controller
+	Robot_Controller() == (
+		ctl_motor_state := 0;
+		ctl_t := 0.1;
+		ctl_q := 0;
+	);
+
+	public MotorOn: () ==> ()
+	MotorOn() == duration (0) (
+		ctl_motor_state := 1;
+		MySystem`arm.MotorOn();
+	);
+	
+	public MotorOff: () ==> ()
+	MotorOff() == duration (0) (
+		ctl_motor_state := 0;
+		MySystem`arm.MotorOff();
+	);
+	
+	public TorquePos: () ==> ()
+	TorquePos() == duration (0) (
+		ctl_t := 0.1;
+		MySystem`arm.TorquePos();
+	);
+	
+	public TorqueNeg: () ==> ()
+	TorqueNeg() == duration (0) (
+		ctl_t := -0.1;
+		MySystem`arm.TorqueNeg();
+	);
+	
+	public MonitorAngle: () ==> ()
+	MonitorAngle() == duration (0) (
+		ctl_q := MySystem`arm.GetAngle();
+	);
+	
+	public EnsureSafeRange: () ==> ()
+	EnsureSafeRange() == duration (0) (
+		if (ctl_q < MySystem`arm.N1 and ctl_q > MySystem`arm.M1) then (
+			MotorOn();
+			TorquePos();
+		) else if (ctl_q > MySystem`arm.N2 and ctl_q < MySystem`arm.M2) then (
+			MotorOn();
+			TorqueNeg();
+		) else (
+			MotorOff();
+		);
+	);
+
+sync
+	mutex(MotorOn, MotorOff);
+	mutex(TorquePos, TorqueNeg);
+
+end Robot_Controller
