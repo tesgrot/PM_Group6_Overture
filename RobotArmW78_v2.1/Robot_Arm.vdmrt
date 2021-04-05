@@ -1,0 +1,93 @@
+class Robot_Arm
+
+instance variables
+
+	public env_q	:	real; -- radians, current angle of joint
+	public env_motor_state		:	nat; -- 1=active, 0=inactive
+	public env_t : real; -- "torque" - specifies the up / down movement
+	public data_history : seq of (nat * real * nat * real);
+	private final_sim_time : real;
+
+values -- left these here for later
+
+	-- m	: real = 1.2; -- kg, mass of the end effector
+	-- g	:	real = -9.81; -- m/second^2, acceleration due to gravity
+	-- r	:	real = 0.8; -- m, length of link
+	
+	public N1 : real = 0;
+	public N2 : real = 3.14/2; --MATH`pi/2;
+	public M1 : real = N1-0.4;
+	public M2 : real = N2+0.4;
+
+operations
+
+	public Robot_Arm: () ==> Robot_Arm
+	Robot_Arm() == (
+		final_sim_time := 0;
+		env_q	:= 0;
+		env_motor_state	:= 0;
+		env_t := 0.1; -- ~5.7deg
+		data_history := [];
+	);
+	
+	public setFinalSimulationTime : (real) ==> ()
+ 		setFinalSimulationTime(t) == duration(0) (
+ 		final_sim_time := t;
+ 	);
+	
+	public MotorOn: () ==> ()
+	MotorOn() == duration (0) (
+		env_motor_state := 1;
+	);
+	
+	public MotorOff: () ==> ()
+	MotorOff() == duration (0) (
+		env_motor_state := 0;
+	);
+	
+	public TorquePos: () ==> ()
+	TorquePos() == duration (0) (
+		env_t := 0.1;
+	);
+	
+	public TorqueNeg: () ==> ()
+	TorqueNeg() == duration (0) (
+		env_t := -0.1;
+	);
+	
+	public GetAngle: () ==> real
+	GetAngle() == duration (0) (
+		return env_q;
+	);
+	
+	-- evolution of angle
+	public Step: (real) ==> ()
+	Step(delta) == duration (0) (
+		
+		--COMPUTE NEW VALUES AFTER DELTA TIME UNITS HAVE PASSED
+		-- time_factor assumed to be in seconds
+		dcl delta_q : real := (env_motor_state * env_t);
+		env_q := env_q + delta_q * delta;
+		
+	);
+	
+	public RecordState : () ==> ()
+	RecordState() == duration(0) (
+		data_history := data_history ^ [mk_(time, env_q, env_motor_state, env_t)];
+	);
+	
+	public IsFinished : () ==> ()
+	IsFinished() == skip;
+
+--Commented due to infinite loop error occuring when threads are initialised
+--sync
+	--per IsFinished => (time > final_sim_time);
+
+--thread
+	--periodic(1,0,0,0)(RecordState);
+
+--sync
+--	mutex(MotorOn, MotorOff);
+--	mutex(TorquePos, TorqueNeg);
+
+end Robot_Arm

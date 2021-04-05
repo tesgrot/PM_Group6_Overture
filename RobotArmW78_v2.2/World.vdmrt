@@ -1,0 +1,97 @@
+class World
+
+instance variables
+	io : IO := new IO();
+	current_time : real := 0;
+
+operations
+	
+	public UpdateTimeStamp : () ==> ()
+ 		UpdateTimeStamp() == duration(0) (
+ 		current_time := time / 1E9;
+ 	);
+	
+	public echoLabels : () ==> ()
+	echoLabels() == (
+		dcl str : seq of char := "inst\tenv_m_s\tenv_t\tenv_q\tctl_m_s\tctl_t\tctl_q\n";
+		def - = io.echo(str) in skip;
+	);
+	
+	public echoState : (nat) ==> ()
+	echoState(counter) == (
+		dcl str : seq of char := "";
+		str := str ^ VDMUtil`val2seq_of_char[nat](counter);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[Robot_Arm`motor_state](
+			MySystem`arm.env_motor_state);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[Robot_Arm`torque](
+			MySystem`arm.env_torque);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`arm.env_q);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[Robot_Arm`motor_state](
+			MySystem`controller.ctl_motor_state);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[Robot_Arm`torque](
+			MySystem`controller.ctl_torque);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`controller.ctl_q);
+		str := str ^ "\n";
+		def - = io.echo(str) in skip;
+	);
+	
+		public Scenario1 : () ==> (seq of (nat * real * Robot_Arm`motor_state * Robot_Arm`torque))
+			Scenario1() == (
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			MySystem`controller.MotorOn();
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			MySystem`arm.Step();
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			return MySystem`arm.data_history;
+		);
+	
+	public Scenario2 : () ==> (seq of (nat * real * Robot_Arm`motor_state * Robot_Arm`torque))
+		Scenario2() == (
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			MySystem`controller.MotorOn();
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			duration(20E9) skip;
+			MySystem`arm.Step();
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			return MySystem`arm.data_history;
+		);
+	
+		public Scenario3 : () ==> (seq of (nat * real * Robot_Arm`motor_state * Robot_Arm`torque))
+		Scenario3() == (
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			MySystem`arm.MotorOn();
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			MySystem`arm.Step();
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			return MySystem`arm.data_history;
+		);
+	
+	
+	public Scenario4 : () ==> (seq of (nat * real * Robot_Arm`motor_state * Robot_Arm`torque))
+		Scenario4() == (
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			MySystem`arm.TorquePos();
+						UpdateTimeStamp();
+						MySystem`arm.RecordState();
+			return MySystem`arm.data_history;
+		);
+
+end World
