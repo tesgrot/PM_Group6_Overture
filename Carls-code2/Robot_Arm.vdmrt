@@ -1,16 +1,11 @@
 class Robot_Arm
 
-types
-	public motor_state = <On> | <Off>;
-	public torque = <Pos> | <Neg>;
-	
 instance variables
 
-	public last_time : real;
 	public env_q	:	real; -- radians, current angle of joint
-	public env_motor_state: motor_state;
-	public env_torque: torque; -- "torque" - specifies the up / down movement
-	public data_history : seq of (nat * real * motor_state * torque);
+	public env_motor_state		:	nat; -- 1=active, 0=inactive
+	public env_t : real; -- "torque" - specifies the up / down movement
+	public data_history : seq of (nat * real * nat * real);
 	private final_sim_time : real;
 
 values -- left these here for later
@@ -28,11 +23,10 @@ operations
 
 	public Robot_Arm: () ==> Robot_Arm
 	Robot_Arm() == (
-		last_time := 0;
-		env_torque	:= <Pos>;
 		final_sim_time := 0;
 		env_q	:= 0;
-		env_motor_state	:= <Off>;
+		env_motor_state	:= 0;
+		env_t := 0.1; -- ~5.7deg
 		data_history := [];
 	);
 	
@@ -41,65 +35,59 @@ operations
  		final_sim_time := t;
  	);
 	
-	
 	public MotorOn: () ==> ()
-	MotorOn() == duration (5E8) (
-		env_motor_state := <On>;
+	MotorOn() == duration (0) (
+		env_motor_state := 1;
 	);
 	
 	public MotorOff: () ==> ()
-	MotorOff() == duration (5E8) (
-		env_motor_state := <Off>;
+	MotorOff() == duration (0) (
+		env_motor_state := 0;
 	);
 	
 	public TorquePos: () ==> ()
-	TorquePos() == duration (1E8) (
-		env_torque := <Pos>;
+	TorquePos() == duration (0) (
+		env_t := 0.1;
 	);
 	
 	public TorqueNeg: () ==> ()
-	TorqueNeg() == duration (1E8) (
-		env_torque := <Neg>;
+	TorqueNeg() == duration (0) (
+		env_t := -0.1;
 	);
-
+	
 	public GetAngle: () ==> real
-	GetAngle() == duration (1E8) (
+	GetAngle() == duration (0) (
 		return env_q;
 	);
 	
 	-- evolution of angle
-	public Step: () ==> ()
-	Step() == duration (0) (
+	public Step: (real) ==> ()
+	Step(delta) == duration (0) (
 		
 		--COMPUTE NEW VALUES AFTER DELTA TIME UNITS HAVE PASSED
 		-- time_factor assumed to be in seconds
-		dcl t : real := time / 1E9;
-		dcl delta : real := (t - last_time);
-		dcl ms: nat := 0;
-		dcl tq: real := 0.1;
-		dcl delta_q : real := 0;
-		last_time := t;
-		if(env_motor_state = <On>) then (ms := 1);
-		if(env_torque = <Neg>) then (tq := -0.1);
-		delta_q := (ms * tq);
+		dcl delta_q : real := (env_motor_state * env_t);
 		env_q := env_q + delta_q * delta;
+		
 	);
 	
 	public RecordState : () ==> ()
 	RecordState() == duration(0) (
-		data_history := data_history ^ [mk_(time, env_q, env_motor_state, env_torque)];
+		data_history := data_history ^ [mk_(time, env_q, env_motor_state, env_t)];
 	);
+	
+	public DoStep : () ==> ()
+	DoStep() == skip;
 	
 	public IsFinished : () ==> ()
 	IsFinished() == skip;
 
-
 --Commented due to infinite loop error occuring when threads are initialised
---sync
-	--per IsFinished => (time > final_sim_time);
+sync
+	per IsFinished => (time > final_sim_time);
 
---thread
-	--periodic(1,0,0,0)(RecordState);
+thread
+	periodic(10,0,0,0)(DoStep);
 
 --sync
 --	mutex(MotorOn, MotorOff);

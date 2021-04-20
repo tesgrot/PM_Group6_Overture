@@ -44,10 +44,12 @@ operations
 		ctl_q := MySystem`arm.GetAngle();
 	);
 	
---	public Empty: () ==> ()
---    Empty() == duration (0) (
---        return
---    );
+	public Empty: () ==> ()
+    Empty() == duration (0) (
+        def - = MySystem`arm.GetAngle() in skip;
+        
+        --skip
+    );
 	
 	public EnsureSafeRange: () ==> ()
 	EnsureSafeRange() == duration (0) (
@@ -68,7 +70,9 @@ operations
 	--mutex(TorquePos, TorqueNeg);
 	--per  =>  ;
 
---thread
-	--periodic(1,0,0,0)(Empty);
+thread
+	periodic(1,0,0,0)(Empty);
 	
 end Robot_Controller
+
+

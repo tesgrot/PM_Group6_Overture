@@ -10,9 +10,9 @@ operations
 	
 	public Robot_Controller: () ==> Robot_Controller
 	Robot_Controller() == (
-		ctl_motor_state := 0;
-		ctl_t := 0.1;
-		ctl_q := 0;
+		ctl_motor_state := 0;	
+		ctl_t := 0.1;			--read from envrionment
+		ctl_q := 0;				
 	);
 
 	public MotorOn: () ==> ()
@@ -44,6 +44,13 @@ operations
 		ctl_q := MySystem`arm.GetAngle();
 	);
 	
+	public Empty: () ==> ()
+    Empty() == duration (0) (
+        --def - = MySystem`arm.GetAngle() in skip;
+        
+        skip
+    );
+	
 	public EnsureSafeRange: () ==> ()
 	EnsureSafeRange() == duration (0) (
 		if (ctl_q < MySystem`arm.N1 and ctl_q > MySystem`arm.M1) then (
@@ -57,8 +64,15 @@ operations
 		);
 	);
 
-sync
-	mutex(MotorOn, MotorOff);
-	mutex(TorquePos, TorqueNeg);
+--Commented due to infinite loop error occuring when threads are initialised
+--sync
+	--mutex(MotorOn, MotorOff);
+	--mutex(TorquePos, TorqueNeg);
+	--per  =>  ;
 
+thread
+	periodic(1,0,0,0)(Empty);
+	
 end Robot_Controller
+
+

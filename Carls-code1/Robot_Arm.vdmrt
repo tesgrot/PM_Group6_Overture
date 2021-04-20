@@ -2,11 +2,11 @@ class Robot_Arm
 
 instance variables
 
-	public now : real;
 	public env_q	:	real; -- radians, current angle of joint
 	public env_motor_state		:	nat; -- 1=active, 0=inactive
 	public env_t : real; -- "torque" - specifies the up / down movement
 	public data_history : seq of (nat * real * nat * real);
+	private final_sim_time : real;
 
 values -- left these here for later
 
@@ -23,13 +23,17 @@ operations
 
 	public Robot_Arm: () ==> Robot_Arm
 	Robot_Arm() == (
-		now := 0;
+		final_sim_time := 0;
 		env_q	:= 0;
 		env_motor_state	:= 0;
-		env_t := 0.1; -- ~5deg
+		env_t := 0.1; -- ~5.7deg
 		data_history := [];
 	);
 	
+	public setFinalSimulationTime : (real) ==> ()
+ 		setFinalSimulationTime(t) == duration(0) (
+ 		final_sim_time := t;
+ 	);
 	
 	public MotorOn: () ==> ()
 	MotorOn() == duration (0) (
@@ -64,7 +68,6 @@ operations
 		-- time_factor assumed to be in seconds
 		dcl delta_q : real := (env_motor_state * env_t);
 		env_q := env_q + delta_q * delta;
-		now := now + delta;
 		
 	);
 	
@@ -73,14 +76,18 @@ operations
 		data_history := data_history ^ [mk_(time, env_q, env_motor_state, env_t)];
 	);
 	
+	public DoStep : () ==> ()
+	DoStep() == skip;
+	
 	public IsFinished : () ==> ()
 	IsFinished() == skip;
-	
-sync
-	per IsFinished => (time > 100);
 
-thread
-	periodic(1,0,0,0)(RecordState);
+--Commented due to infinite loop error occuring when threads are initialised
+sync
+	per IsFinished => (time > final_sim_time);
+
+--thread
+	--periodic(10,0,0,0)(DoStep);
 
 --sync
 --	mutex(MotorOn, MotorOff);

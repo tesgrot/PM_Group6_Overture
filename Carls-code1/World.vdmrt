@@ -39,26 +39,22 @@ operations
 		def - = io.echo(str) in skip;
 	);
 	
-	public Scenario1 : () ==> (seq of (nat * real * nat * real))
-		Scenario1() == (
+
+	
+		public Scenario2 : () ==> (seq of (nat * real * nat * real))
+		Scenario2() == (
 			--Commented due to infinite loop error occuring when threads are initialised
-			--MySystem`arm.setFinalSimulationTime(100);
-			--start(MySystem`controller);
+			
+			MySystem`arm.setFinalSimulationTime(1000);
+			
+			start(MySystem`controller);
 			--start(MySystem`arm);
-			MySystem`arm.RecordState();
-			MySystem`controller.MotorOn();
-			MySystem`arm.RecordState();
-			MySystem`arm.Step(4);
-						MySystem`arm.RecordState();
-			MySystem`controller.MonitorAngle();
-						MySystem`arm.RecordState();
-			MySystem`controller.EnsureSafeRange();
-						MySystem`arm.RecordState();
-			MySystem`controller.MotorOff();
-						MySystem`arm.RecordState();
+
 			MySystem`arm.IsFinished();
-						MySystem`arm.RecordState();
+
 			return MySystem`arm.data_history;
 		);
 	
 end World
+
+
