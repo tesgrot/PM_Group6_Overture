@@ -1,0 +1,41 @@
+class AngleSensor
+
+instance variables
+	
+	io : IO := new IO();
+	public snr_q	:	real;
+	
+operations
+	
+	public AngleSensor: () ==> AngleSensor
+	AngleSensor() == (
+		snr_q := 0;	
+	);
+
+	public ReadAngle: () ==> ()--(real)
+	ReadAngle() == duration (0) (--(1E7) 
+		--dcl str : seq of char := "ReadAngle calle \n";
+		--str := str ^ VDMUtil`val2seq_of_char[real](snr_q);
+		--str := str ^ "\n";
+		--def - = io.echo(str) in skip;
+			snr_q := MySystem`arm.q;
+	);
+
+	public GetAngle: () ==> (real)
+	GetAngle() == duration (0) (--(1E7) (
+		--dcl str : seq of char := "GetAngle called: ";
+		--str := str ^ VDMUtil`val2seq_of_char[real](snr_q);
+		--str := str ^ "\n";
+		--def - = io.echo(str) in skip;
+			return snr_q;
+	);
+	
+	public Step: () ==> ()
+	Step() == duration (0) (--(1E7) (
+		ReadAngle();
+	)
+	
+thread
+	periodic(1E7, 0, 0, 0)(Step);
+
+end AngleSensor

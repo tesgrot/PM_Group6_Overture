@@ -1,0 +1,50 @@
+class Motor
+
+instance variables
+
+	io : IO := new IO();
+	public act_motor_state	:	Robot_Arm`MotorState;
+	public act_T_motor	:	real;
+	
+operations
+	
+	public Motor: () ==> Motor
+	Motor() == (
+		act_motor_state := <Off>;
+		act_T_motor := 0;
+	);
+
+	public SetMotorState: (Robot_Arm`MotorState) ==> ()
+	SetMotorState(s) == duration (0) (--(5E8) (
+		--dcl str : seq of char := "SetMotorState called: ";
+		act_motor_state := s;
+		--str := str ^ VDMUtil`val2seq_of_char[Robot_Arm`MotorState](s);
+		--str := str ^ "\n";
+		--def - = io.echo(str) in skip;
+	);
+
+	public GetMotorState: () ==> (Robot_Arm`MotorState)
+	GetMotorState() == duration (0) (--(1E8) (
+		--dcl str : seq of char := "GetMotorState called: ";
+		--str := str ^ VDMUtil`val2seq_of_char[Robot_Arm`MotorState](act_motor_state);
+		--str := str ^ "\n";
+			return act_motor_state;
+	);
+
+	public SetTorqueMotor: (real) ==> ()
+	SetTorqueMotor(v) == duration (0) (--(5E8) (
+		act_T_motor := v;
+	);
+	
+	public Step: () ==> ()
+	Step() == duration (0) (
+		--dcl str : seq of char := "Step in Motor called\n";
+		--def - = io.echo(str) in skip;
+	
+		if act_motor_state = <On> then MySystem`arm.ChangeAngle(act_T_motor);
+	)
+	
+thread
+	periodic(1E9, 0, 0, 0)(Step);
+
+end Motor
