@@ -14,8 +14,8 @@ instance variables
 	public mode : Mode;
 	
 values
-	 Kp : real = 0.004;--0.04;
-	 Kd : real = 0.002;--0.1;
+	 Kp : real = 0.04;--0.004;
+	 Kd : real = 0.1;--0.002;
 	
 operations
 	
