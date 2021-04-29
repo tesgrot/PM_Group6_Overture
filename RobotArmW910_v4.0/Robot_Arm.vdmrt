@@ -1,0 +1,77 @@
+class Robot_Arm
+
+types
+	public MotorState = <On> | <Off>;
+
+instance variables
+	io : IO := new IO();
+	public q	:	real; -- radians, current angle of joint
+	public q_vel	:	real;
+	public q_acc	:	real;
+	public data_history : seq of (real*real*Robot_Controller`Mode);
+	public destab_val : real;
+
+values
+	 m	: real = 1.2; -- kg, mass of the end effector
+	 g	:	real = -9.81; -- m/second^2, acceleration due to gravity
+	 r	:	real = 0.8; -- m, length of link
+	 I : real = m * r * r;
+	public N1 : real = 0;
+	public N2 : real = 90; --MATH`pi/2;
+	public M1 : real = N1-20;
+	public M2 : real = 110;
+
+operations
+
+	public Robot_Arm: () ==> Robot_Arm
+	Robot_Arm() == (
+		q	:= 0;
+		q_vel := 0;
+		q_acc := 0;
+		data_history := [];
+		destab_val := 0;
+	);
+	
+	public GetAngle: () ==> real
+	GetAngle() == duration (0) (--(5E8) (
+		return q;
+	);
+	
+	public SetDestabilizationVal: (real) ==> ()
+	SetDestabilizationVal(v) == duration (0) (
+	 destab_val:= v;
+	);
+	
+	public destabilize: () ==> ()
+	destabilize() == duration (0)(
+		q := destab_val;
+	);
+	
+	
+	public ChangeAngle: (real) ==> () 
+	ChangeAngle(t) == duration (0)(--(5E7) (
+		dcl str : seq of char := "";
+		q_acc := t/I;--(t-Tfriction)/I;
+		q_vel := q_vel + q_acc;--*dt
+		q := q + q_vel;--*dt
+		str := str ^ VDMUtil`val2seq_of_char[real](q);
+		str := str ^ "\n";
+		def - = io.echo(str) in skip;
+		RecordState();
+	);
+	
+	public RecordState : () ==> ()
+	RecordState() == duration(0) (
+		--dcl str : seq of char := "RecordState called\n";
+		--def - = io.echo(str) in skip;
+		data_history := data_history ^ [mk_(time/1000000000, q, MySystem`controller.mode)];--, MySystem`controller.q_t, MySystem`motor.act_motor_state, MySystem`motor.act_T_motor)];
+	);
+
+thread
+	destabilize();
+
+--sync
+--	mutex(MotorOn, MotorOff);
+--	mutex(TorquePos, TorqueNeg);
+
+end Robot_Arm

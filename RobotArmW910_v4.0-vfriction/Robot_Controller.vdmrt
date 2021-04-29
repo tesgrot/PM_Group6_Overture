@@ -1,0 +1,107 @@
+class Robot_Controller
+
+types 
+public Mode = <Init> | <Normal> | <EStop>
+
+instance variables
+	
+	io : IO := new IO();
+	public ctl_T_motor : real;
+	public ctl_q: real;
+	public q_t: real;
+	public e : real;
+	public e_vel : real;
+	public mode : Mode;
+	
+values
+	 Kp : real = 0.004;--0.04;
+	 Kd : real = 0.002;--0.1;
+	
+operations
+	
+	public Robot_Controller: () ==> Robot_Controller
+	Robot_Controller() == (
+		mode := <Init>;	--starting initialisation mode
+		ctl_q := 0;
+		q_t := 0;
+		ctl_T_motor := 0;
+		e := 0;
+		e_vel := 0;	
+		mode := <Normal>;	--done with initialisation thus we set the mode to normal
+	);
+	
+	public SetTargetAngle: (real) ==> ()
+	SetTargetAngle(v) == duration (0) (--(5E8) (
+	--if mode = <Normal> then 
+	q_t := v;
+				--dcl str : seq of char := "SetTargetAngle called";
+		--str := str ^ VDMUtil`val2seq_of_char[real](q_t);
+		--str := str ^ "\n";
+		--def - = io.echo(str) in skip;
+	);
+	
+	public MonitorAngle: () ==> ()
+	MonitorAngle() == duration (0) (--(1E7) (
+		dcl str : seq of char := "q value: ";
+	ctl_q := MySystem`sensor.GetAngle();
+	if ctl_q < MySystem`arm.M1 or MySystem`arm.M2 < ctl_q then(
+		str := str ^ VDMUtil`val2seq_of_char[real](ctl_q);
+		str := str ^ "; mode: <EStop>";
+		str := str ^ "\n";
+		def - = io.echo(str) in skip;
+		mode := <EStop>;
+	);
+	);
+	
+	public EnsureSafeRange: () ==> ()
+	EnsureSafeRange() == duration (0) (
+	--if mode = <Normal> then (
+		dcl e_prev : real := e;
+		dcl motor_state : Robot_Arm`MotorState := <On>;
+		--dcl str : seq of char := "EnsureSafeRange: ";
+		
+		e := q_t - ctl_q;
+		if e = e_prev then
+			e_vel := e_vel
+		else
+			e_vel := e - e_prev;--/dt
+		ctl_T_motor := Kp * e + Kd * e_vel;
+		if abs e < 1 then motor_state := <Off>;    -- implement time condition here 
+		
+		MySystem`motor.SetMotorState(motor_state);
+		MySystem`motor.SetTorqueMotor(ctl_T_motor);
+		--)
+		--str := str ^ VDMUtil`val2seq_of_char[real](e);
+		--str := str ^ "\t";
+		--str := str ^ VDMUtil`val2seq_of_char[real](e_vel);
+		--str := str ^ "\t";
+		--str := str ^ VDMUtil`val2seq_of_char[real](ctl_q);
+		--str := str ^ "\t";
+		--str := str ^ VDMUtil`val2seq_of_char[real](ctl_T_motor);
+		--str := str ^ "\n";
+		--def - = io.echo(str) in skip;
+	);
+	
+	private Loop : () ==> ()
+	Loop() == (
+		-- dcl str : seq of char := "Loop called: ";
+		--
+		--else(
+			MonitorAngle();
+			EnsureSafeRange(); 
+		--)
+		--dcl str : seq of char := "Loop in controller\n";
+		--def - = io.echo(str) in skip;
+	);
+	
+public IsFinished : () ==> ()
+	IsFinished() == skip;
+	
+sync
+	per IsFinished => (abs (q_t - ctl_q) < 1) or mode = <EStop>;
+	
+thread
+	-- Controller monitors and controls robot arm periodically (detects changes rather late)
+	periodic(1E8, 0, 0, 0)(Loop);
+	
+end Robot_Controller

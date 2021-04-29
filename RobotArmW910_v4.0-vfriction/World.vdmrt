@@ -1,0 +1,41 @@
+class World
+
+operations
+
+	public Scenario1 : () ==> (seq of (real * real * Robot_Controller`Mode))-- * Robot_Arm`MotorState * real))
+		Scenario1() == (
+			MySystem`arm.SetDestabilizationVal(-25);
+			start(MySystem`arm);
+			start(MySystem`controller);
+			start(MySystem`sensor);
+			start(MySystem`motor);
+			MySystem`controller.SetTargetAngle(180);
+			MySystem`controller.IsFinished();
+			return MySystem`arm.data_history;
+		);
+
+	public Scenario2 : () ==> (seq of (real * real * Robot_Controller`Mode))-- * Robot_Arm`MotorState * real))
+		Scenario2() == (
+			MySystem`arm.SetDestabilizationVal(-20);
+			start(MySystem`arm);
+			start(MySystem`controller);
+			start(MySystem`sensor);
+			start(MySystem`motor);
+			MySystem`controller.SetTargetAngle(180);
+			MySystem`controller.IsFinished();
+			return MySystem`arm.data_history;
+		);
+
+	public Scenario3 : () ==> (seq of (real * real * Robot_Controller`Mode))-- * Robot_Arm`MotorState * real))
+		Scenario3() == (
+--			MySystem`arm.SetDestabilizationVal(-20);
+			start(MySystem`arm);
+			start(MySystem`controller);
+			start(MySystem`sensor);
+			start(MySystem`motor);
+			MySystem`controller.SetTargetAngle(45);
+			MySystem`controller.IsFinished();
+			return MySystem`arm.data_history;
+		);
+
+end World
