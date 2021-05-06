@@ -1,0 +1,19 @@
+class HardwareInterface
+
+values
+  -- @ interface: type = parameter, name="targetangle";
+	public targetangle : RealPort = new RealPort(45.0);
+  -- @ interface: type = parameter, name="minangle";
+	public minangle : RealPort = new RealPort(-20.0);
+	-- @ interface: type = parameter, name="maxangle";
+	public maxangle : RealPort = new RealPort(110.0);
+
+instance variables
+  -- @ interface: type = output, name="angle";
+	public angle : RealPort := new RealPort(0.0);
+	-- @ interface: type = output, name="motor";
+	public motorState : BoolPort := new BoolPort(false);
+	-- @ interface: type = output, name="torque";
+	public torque : RealPort := new RealPort(0.0);
+
+end HardwareInterface
