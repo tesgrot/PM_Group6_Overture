@@ -1,0 +1,16 @@
+--##	EXPORT	8a255e3f8791c2b9c79212968b3baaec88ada7a9	SingleWaterTank.fmu	2021-04-05 21:05:22	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+class HardwareInterface
+
+values
+  -- @ interface: type = parameter, name="minlevel";
+	public minlevel : RealPort = new RealPort(1.0);
+	-- @ interface: type = parameter, name="maxlevel";
+	public maxlevel : RealPort = new RealPort(2.0);
+
+instance variables
+  -- @ interface: type = input, name="level";
+	public level : RealPort := new RealPort(0.0);
+	-- @ interface: type = output, name="valve";
+	public valveState : BoolPort := new BoolPort(false);
+
+end HardwareInterface
