@@ -1,3 +1,6 @@
+--##	EXPORT	4b7f795bf47989a08acbbc3046a24c2744cbac6c	RobotArm_v5.0.fmu	2021-13-05 13:47:26	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	d62e0acd076b193c214892b407eda858498200f2	RobotArm_v5.0.fmu	2021-13-05 12:25:03	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	7b2affffc7b3da1300196829a884175bcd7a682a	RobotArm_v5.0.fmu	2021-13-05 12:24:18	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
 class HardwareInterface
 
 values
@@ -9,11 +12,15 @@ values
 	public maxangle : RealPort = new RealPort(110.0);
 
 instance variables
-  -- @ interface: type = output, name="angle";
+  -- @ interface: type = input, name="angle";
 	public angle : RealPort := new RealPort(0.0);
 	-- @ interface: type = output, name="motor";
 	public motorState : BoolPort := new BoolPort(false);
 	-- @ interface: type = output, name="torque";
 	public torque : RealPort := new RealPort(0.0);
+	-- @ interface: type = input, name="e";
+	public e : RealPort := new RealPort(0.0);
+	-- @ interface: type = input, name="vel";
+	public vel : RealPort := new RealPort(1.0);
 
 end HardwareInterface
