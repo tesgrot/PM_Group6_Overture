@@ -2,46 +2,18 @@ class Motor
 
 instance variables
 
---	public act_motor_state	:	Robot_Arm`MotorState;
---	public act_T_motor	:	real;
 	torque_port : RealPort;
-	state_port : BoolPort;
 	
 operations
 	
-	public Motor: RealPort * BoolPort ==> Motor
-	Motor(t, s) == (
+	public Motor: RealPort ==> Motor
+	Motor(t) == (
 		torque_port := t;
-		state_port := s;
-	);
-
-	public setMotorState: (bool) ==> ()
-	setMotorState(s) ==  (
-		state_port.setValue(s);
 	);
 
 	public setTorqueMotor: (real) ==> ()
 	setTorqueMotor(t) == (
 			torque_port.setValue(t);
 	);
-
---	public GetMotorState: () ==> (Robot_Arm`MotorState)
---	GetMotorState() == duration (0) (--(1E8) (
---		--dcl str : seq of char := "GetMotorState called: ";
---		--str := str ^ VDMUtil`val2seq_of_char[Robot_Arm`MotorState](act_motor_state);
---		--str := str ^ "\n";
---			return act_motor_state;
---	);
-	
---	public Step: () ==> ()
---	Step() == duration (0) (
---		--dcl str : seq of char := "Step in Motor called\n";
---		--def - = io.echo(str) in skip;
---	
---		if act_motor_state = <On> then MySystem`arm.ChangeAngle(act_T_motor);
---	)
---	
---thread
---	periodic(1E9, 0, 0, 0)(Step);
 
 end Motor

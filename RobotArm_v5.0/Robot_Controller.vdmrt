@@ -1,142 +1,64 @@
 class Robot_Controller
 
---types 
---public Mode = <Init> | <Normal> | <EStop>
-
 instance variables
 	angleSensor : AngleSensor;
 	motor : Motor;
 	e_port : RealPort;
-	
-	io : IO := new IO();
---	public ctl_T_motor : real;
---	public ctl_T_friction : real;
---	public ctl_T_gravity : real;
---	public clt_T : real;
---	public ctl_q: real;
---	public q_t: real;
---	public e : real;
---	public e_vel : real;
---	public mode : Model;
+	controllerActive : BoolPort;
 	
 values
-	 Kp : real = 0.004;--0.04;
-	 Kd : real = 0.002;--0.1;
+	 Kp : real = HardwareInterface`Kp.getValue();
+	 Kd : real = HardwareInterface`Kd.getValue();
 	 Fc : real = 0.1;
 	 Fv : real = 0.05;
 	
 operations
 	
-	public Robot_Controller: AngleSensor * Motor * RealPort ==> Robot_Controller
-	Robot_Controller(a,m,e) == (
+	public Robot_Controller: AngleSensor * Motor * RealPort * BoolPort ==> Robot_Controller
+	Robot_Controller(a,m,e,c) == (
 			angleSensor := a;
 			motor := m;
 			e_port := e;
---		mode := <Init>;	--starting initialisation mode
---		ctl_q := 0;
---		q_t := 0;
---		ctl_T_motor := 0;
---		e := 0;
---		e_vel := 0;	
---		mode := <Normal>;	--done with initialisation thus we set the mode to normal
+			controllerActive := c;
 	);
 	
 	private loop : () ==> ()
 	loop() == cycles(2) (
---		dcl str : seq of char := "...: ";
+		
 		dcl e :real := 0;
-		dcl e_prev : real := e;
+		dcl e_prev : real;
 		dcl e_vel : real;
 		dcl t_motor : real;
 		-- retrieve the first value from Co-SIM
 		let angle : real = angleSensor.getAngle() in (
---			HardwareInterface`angle.setValue(angle+1);
-				motor.setTorqueMotor(1.0);
-				motor.setMotorState(true);
-			if angle >= HardwareInterface`maxangle.getValue() or angle <= HardwareInterface`minangle.getValue() then(
-				motor.setMotorState(false);
-				motor.setTorqueMotor(0.0);
-			)
-			else (
-				e_port.setValue(HardwareInterface`targetangle.getValue() - angle);
-				if e = e_prev then (
-					e_vel := e_vel
-				) else (
-					e_vel := e - e_prev;
+			if controllerActive.getValue() = true then (
+				if angle >= HardwareInterface`maxangle.getValue() or angle <= HardwareInterface`minangle.getValue() then(
+					motor.setTorqueMotor(0.0);
+				)
+				else (
+					e := HardwareInterface`targetangle.getValue() - angle;
+					e_prev := e_port.getValue();
+					if e = e_prev then (
+						e_vel := e_vel
+					) else (
+						e_vel := e - e_prev;
+					);
 					t_motor := Kp * e + Kd * e_vel;
-					if t_motor < -1 then t_motor := -1.0;
-					if t_motor > 1 then t_motor := 1.0;
+--					if t_motor < -1.0 then t_motor := -1.0;
+--					if t_motor > 1.0 then t_motor := 1.0;
+--					if abs e < 1.0 then t_motor := 0.0;
 					motor.setTorqueMotor(t_motor);
-					if abs e < 1 then motor.setMotorState(false) else motor.setMotorState(true);
-					
+					e_port.setValue(e);
 				);
+			) else (
+					motor.setTorqueMotor(0.0);
+					e_port.setValue(e);
 			);
---			str := str ^ VDMUtil`val2seq_of_char[real](angle);
---			str := str ^ "\t";
---			str := str ^ VDMUtil`val2seq_of_char[real](t_motor);
---			str := str ^ "\n";
 		);
---		def - = io.echo(str) in skip;
 	);
 	
---	public EnsureSafeRange: () ==> ()
---	EnsureSafeRange() == duration (0) (
---	--if mode = <Normal> then (
---		dcl e_prev : real := e;
---		dcl motor_state : Robot_Arm`MotorState := <On>;
---		--dcl str : seq of char := "EnsureSafeRange: ";
---		
---		e := q_t - ctl_q;
---		if e = e_prev then
---			e_vel := e_vel
---		else
---			e_vel := e - e_prev;--/dt
---		ctl_T_motor := Kp * e + Kd * e_vel;
---		
---		if ctl_T_motor < -1 then ctl_T_motor := -1;
---		if ctl_T_motor > 1 then ctl_T_motor := 1;
---		
---		if abs e < 1 then motor_state := <Off>;    -- implement time condition here 
---		
---		MySystem`motor.SetMotorState(motor_state);
---		MySystem`motor.SetTorqueMotor(ctl_T_motor);
---		--)
---	);
-	
---	public SetTargetAngle: (real) ==> ()
---	SetTargetAngle(v) == duration (0) (--(5E8) (
---	--if mode = <Normal> then 
---	q_t := v;
---	);
-	
---	public MonitorAngle: () ==> ()
---	MonitorAngle() == duration (0) (--(1E7) (
---	ctl_q := MySystem`sensor.GetAngle();
---	if ctl_q < MySystem`arm.M1 or MySystem`arm.M2 < ctl_q then(
---		mode := <EStop>;
---	);
---	);
-	
---	private Loop : () ==> ()
---	Loop() == (
---		-- dcl str : seq of char := "Loop called: ";
---		--
---		--else(
---			MonitorAngle();
---			EnsureSafeRange(); 
---		--)
---		--dcl str : seq of char := "Loop in controller\n";
---		--def - = io.echo(str) in skip;
---	);
-	
---public IsFinished : () ==> ()
---	IsFinished() == skip;
-	
---sync
---	per IsFinished => (abs (q_t - ctl_q) < 1) or mode = <EStop>;
 	
 thread
-	-- Controller monitors and controls robot arm periodically (detects changes rather late)
-	periodic(1E8, 0, 0, 0)(loop);
+	periodic(10E6, 0, 0, 0)(loop);
 	
 end Robot_Controller

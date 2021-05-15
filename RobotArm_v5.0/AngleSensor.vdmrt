@@ -9,23 +9,9 @@ operations
 		port := p;	
 	);
 
---	public ReadAngle: () ==> ()--(real)
---	ReadAngle() == duration (0) (--(1E7)
-----			port := MySystem`arm.q;
---			skip;
---	);
-
 	public getAngle: () ==> (real)
 	getAngle() == duration (0) (--(1E7) (
 			return port.getValue();
 	);
 	
---	public Step: () ==> ()
---	Step() == duration (0) (--(1E7) (
---		ReadAngle();
---	)
---	
---thread
---	periodic(1E8, 0, 0, 0)(Step);
-
 end AngleSensor

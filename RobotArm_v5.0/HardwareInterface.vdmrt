@@ -1,23 +1,26 @@
---##	EXPORT	4b7f795bf47989a08acbbc3046a24c2744cbac6c	RobotArm_v5.0.fmu	2021-13-05 13:47:26	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
---##	EXPORT	d62e0acd076b193c214892b407eda858498200f2	RobotArm_v5.0.fmu	2021-13-05 12:25:03	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
---##	EXPORT	7b2affffc7b3da1300196829a884175bcd7a682a	RobotArm_v5.0.fmu	2021-13-05 12:24:18	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	ce590d8cfdcdc1b0d81812b520435d2432e56a9e	RobotArm_v5.0.fmu	2021-15-05 14:35:21	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	fa32cd478af83489c2e0f029da4bf8f9068097fa	RobotArm_v5.0.fmu	2021-15-05 14:33:13	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
 class HardwareInterface
 
 values
   -- @ interface: type = parameter, name="targetangle";
-	public targetangle : RealPort = new RealPort(45.0);
+	public targetangle : RealPort = new RealPort(4.0);
   -- @ interface: type = parameter, name="minangle";
 	public minangle : RealPort = new RealPort(-20.0);
 	-- @ interface: type = parameter, name="maxangle";
 	public maxangle : RealPort = new RealPort(110.0);
+	-- @ interface: type = parameter, name="ctlActive";
+	public ctlActive : BoolPort = new BoolPort(true);
+	-- @ interface: type = parameter, name="Kp";
+	public Kp : RealPort = new RealPort(0.04);
+	-- @ interface: type = parameter, name="Kd";
+	public Kd : RealPort = new RealPort(0.1);
 
 instance variables
-  -- @ interface: type = input, name="angle";
-	public angle : RealPort := new RealPort(0.0);
-	-- @ interface: type = output, name="motor";
-	public motorState : BoolPort := new BoolPort(false);
 	-- @ interface: type = output, name="torque";
 	public torque : RealPort := new RealPort(0.0);
+  -- @ interface: type = input, name="angle";
+	public angle : RealPort := new RealPort(0.0);
 	-- @ interface: type = input, name="e";
 	public e : RealPort := new RealPort(0.0);
 	-- @ interface: type = input, name="vel";
