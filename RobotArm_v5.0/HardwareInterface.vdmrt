@@ -4,17 +4,17 @@ class HardwareInterface
 
 values
   -- @ interface: type = parameter, name="targetangle";
-	public targetangle : RealPort = new RealPort(4.0);
+	public targetangle : RealPort = new RealPort(0.52); -- ~30deg
   -- @ interface: type = parameter, name="minangle";
-	public minangle : RealPort = new RealPort(-20.0);
+	public minangle : RealPort = new RealPort(-0.17); -- ~-10deg
 	-- @ interface: type = parameter, name="maxangle";
-	public maxangle : RealPort = new RealPort(110.0);
+	public maxangle : RealPort = new RealPort(1.7); -- ~100deg
 	-- @ interface: type = parameter, name="ctlActive";
 	public ctlActive : BoolPort = new BoolPort(true);
 	-- @ interface: type = parameter, name="Kp";
-	public Kp : RealPort = new RealPort(0.04);
+	public Kp : RealPort = new RealPort(1.5);
 	-- @ interface: type = parameter, name="Kd";
-	public Kd : RealPort = new RealPort(0.1);
+	public Kd : RealPort = new RealPort(0.01);
 
 instance variables
 	-- @ interface: type = output, name="torque";

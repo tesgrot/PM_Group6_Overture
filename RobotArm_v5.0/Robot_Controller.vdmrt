@@ -27,7 +27,7 @@ operations
 		
 		dcl e :real := 0;
 		dcl e_prev : real;
-		dcl e_vel : real;
+		dcl e_vel : real := 0;
 		dcl t_motor : real;
 		-- retrieve the first value from Co-SIM
 		let angle : real = angleSensor.getAngle() in (
@@ -44,8 +44,10 @@ operations
 						e_vel := e - e_prev;
 					);
 					t_motor := Kp * e + Kd * e_vel;
---					if t_motor < -1.0 then t_motor := -1.0;
---					if t_motor > 1.0 then t_motor := 1.0;
+--					if t_motor <= -1.0
+--					then (t_motor := -1.0)
+--					else if (t_motor >= 1.0)
+--					then (t_motor := 1.0);
 --					if abs e < 1.0 then t_motor := 0.0;
 					motor.setTorqueMotor(t_motor);
 					e_port.setValue(e);
