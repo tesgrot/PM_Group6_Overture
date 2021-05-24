@@ -10,7 +10,7 @@ operations
 	);
 
 	public getAngle: () ==> (real)
-	getAngle() == duration (0) (--(1E7) (
+	getAngle() == duration (0) (
 			return port.getValue();
 	);
 	

@@ -4,6 +4,7 @@ instance variables
 	angleSensor : AngleSensor;
 	motor : Motor;
 	e_port : RealPort;
+	e_prime_port : RealPort;
 	controllerActive : BoolPort;
 	
 values
@@ -14,11 +15,12 @@ values
 	
 operations
 	
-	public Robot_Controller: AngleSensor * Motor * RealPort * BoolPort ==> Robot_Controller
-	Robot_Controller(a,m,e,c) == (
+	public Robot_Controller: AngleSensor * Motor * RealPort * RealPort * BoolPort ==> Robot_Controller
+	Robot_Controller(a,m,e,e_prime,c) == (
 			angleSensor := a;
 			motor := m;
 			e_port := e;
+			e_prime_port := e_prime;
 			controllerActive := c;
 	);
 	
@@ -27,7 +29,7 @@ operations
 		
 		dcl e :real := 0;
 		dcl e_prev : real;
-		dcl e_vel : real := 0;
+		dcl e_prime : real := 0;
 		dcl t_motor : real;
 		-- retrieve the first value from Co-SIM
 		let angle : real = angleSensor.getAngle() in (
@@ -39,22 +41,25 @@ operations
 					e := HardwareInterface`targetangle.getValue() - angle;
 					e_prev := e_port.getValue();
 					if e = e_prev then (
-						e_vel := e_vel
+						e_prime := e_prime
 					) else (
-						e_vel := e - e_prev;
+						e_prime := e - e_prime;
 					);
-					t_motor := Kp * e + Kd * e_vel;
+					t_motor := Kp * e + Kd * e_prime;
 --					if t_motor <= -1.0
 --					then (t_motor := -1.0)
 --					else if (t_motor >= 1.0)
 --					then (t_motor := 1.0);
---					if abs e < 1.0 then t_motor := 0.0;
+-- 				the commented section above causes error when imported to INTO-CPS
+--					if abs e < 0.01 then t_motor := 0.0;
 					motor.setTorqueMotor(t_motor);
 					e_port.setValue(e);
+					e_prime_port.setValue(e_prime);
 				);
 			) else (
 					motor.setTorqueMotor(0.0);
 					e_port.setValue(e);
+					e_prime_port.setValue(e_prime);
 			);
 		);
 	);

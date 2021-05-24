@@ -15,7 +15,7 @@ operations
 	MySystem() == (
 		angleSensor := new AngleSensor(hwi.angle);
 		motor := new Motor(hwi.torque);
-		controller := new Robot_Controller(angleSensor, motor, hwi.e, hwi.ctlActive);
+		controller := new Robot_Controller(angleSensor, motor, hwi.e, hwi.e_prime, hwi.ctlActive);
 		cpu1.deploy(controller, "Controller");
 skip;
 	);

@@ -1,3 +1,45 @@
+--##	EXPORT	3a1fc9bea5de36c65b51e5860ed2fe2d085a0803	RobotArm_v5.0.fmu	2021-24-05 21:31:45	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	20cd5786f680897cbc52c7a9bb4200089d045265	RobotArm_v5.0.fmu	2021-24-05 21:30:54	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	81a134734151f0fe69363346ae365ff6a1216ab6	RobotArm_v5.0.fmu	2021-24-05 21:29:57	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	a6539ec35f5c628b75038324fca35a6d952696f4	RobotArm_v5.0.fmu	2021-24-05 21:28:38	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	f93b0923a4a1e4f343068936084412b395f1f0c1	RobotArm_v5.0.fmu	2021-24-05 21:27:39	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	1814f2219f980e4db99d8bd461d6c1ac01bd02c7	RobotArm_v5.0.fmu	2021-24-05 21:26:40	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	d46b12522185ab65dba43a38c069cbdc0bb214af	RobotArm_v5.0.fmu	2021-24-05 21:25:45	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	77967c302c7bd15f3e96162fa8b6941715bea1b9	RobotArm_v5.0.fmu	2021-24-05 21:24:23	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	f2a5b31483e332a28a40d1d40e446c987ba942c3	RobotArm_v5.0.fmu	2021-24-05 20:10:56	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	6be8def96684211f46404f2de719ede4654c6a33	RobotArm_v5.0.fmu	2021-24-05 20:05:20	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	8e38ef3ac12841feed680ab9773f0d84d956d2e5	RobotArm_v5.0.fmu	2021-24-05 19:46:34	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	628823d38532cfd578ea89436ff3618ebe290dd9	RobotArm_v5.0.fmu	2021-24-05 19:39:27	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	e513de440cf6b2ef396d2b60003cb1bdb093019e	RobotArm_v5.0.fmu	2021-20-05 14:44:08	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	10b51722c80eaeac01e11055fc82e8dfcf1c6e65	RobotArm_v5.0.fmu	2021-20-05 14:43:27	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	d09e41e249277c2a0b65ddd3f84df49a4429f6da	RobotArm_v5.0.fmu	2021-20-05 14:42:31	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	1b712a9b8e94d13e5cff6a5a6027464785260b70	RobotArm_v5.0.fmu	2021-20-05 14:41:10	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	dbe39094ce23f9c0965dad57e13d5f0c944b3052	RobotArm_v5.0.fmu	2021-20-05 14:21:57	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	d932cafcdee0ac4839677e9ed276bdbb31b6f9f5	RobotArm_v5.0.fmu	2021-20-05 14:20:27	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	e5cc672ae30353624b5e9b2afd7304b9cb15675c	RobotArm_v5.0.fmu	2021-20-05 14:18:53	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	87f59413056dfb485298ea209df8e9c53b961734	RobotArm_v5.0.fmu	2021-20-05 14:16:46	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	53e7c3ac2e4d56017ab3d8102d384a3137fd4693	RobotArm_v5.0.fmu	2021-20-05 14:08:20	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	b93d5e1cd65f1bc6b52253013725e6546ee8410f	RobotArm_v5.0.fmu	2021-20-05 14:05:50	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	92007dc8888372bb2b7f7ac1ccbea1b50eb5e6e9	RobotArm_v5.0.fmu	2021-20-05 14:02:50	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	accce64e9d18ed13c733a949c05b29431860a820	RobotArm_v5.0.fmu	2021-20-05 14:00:07	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	6c17c1768e5ea249b00c81ee1d8f251b389bc378	RobotArm_v5.0.fmu	2021-20-05 13:53:21	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	984c9b011f46bb5ced98309a462cbe9efa970353	RobotArm_v5.0.fmu	2021-20-05 13:52:42	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	ce30b71ed2a42384d67fc66229d3667c7ef5bb9d	RobotArm_v5.0.fmu	2021-20-05 13:48:10	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	6f9e2eb20e7e7d320bd8976a87db976d6dc103a3	RobotArm_v5.0.fmu	2021-20-05 13:47:22	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	ac75ab48346bc0879b1d068532f28073c94a5bd8	RobotArm_v5.0.fmu	2021-20-05 13:36:08	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	aabadc492dc0ca4065e9425d3efe7aa3c7fd55e1	RobotArm_v5.0.fmu	2021-20-05 13:35:06	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	37a047d0a4ec8334c6e30aa54c090d26d82f5406	RobotArm_v5.0.fmu	2021-20-05 13:24:21	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	bf82bc025c42a2facf16d256ac6a1ac4350e873f	RobotArm_v5.0.fmu	2021-20-05 13:23:27	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	813b0335fd88c865e98eeea4ade2b02c77be54cd	RobotArm_v5.0.fmu	2021-20-05 13:20:40	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	add32b41d4029fe88bf3f018f01fc605752ec3ba	RobotArm_v5.0.fmu	2021-20-05 12:37:56	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	78fb6c580bf7e8596bbaee04dcb825af8855329d	RobotArm_v5.0.fmu	2021-20-05 12:34:06	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	f678bbc2454e357051271ef70e3a9cf902c301c8	RobotArm_v5.0.fmu	2021-20-05 12:32:27	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	3493c73f6e3b077572bd1ef512fddcca1de8545b	RobotArm_v5.0.fmu	2021-20-05 12:30:53	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	74448bd80718c026bb9ecfc0bc0451d5f1937073	RobotArm_v5.0.fmu	2021-20-05 12:24:06	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	e820cda622ead7267581d5be3e59db49419853f3	RobotArm_v5.0.fmu	2021-20-05 12:18:21	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	db93f5bb9314e61ccd8068f6126e4b0cccdfc37d	RobotArm_v5.0.fmu	2021-18-05 12:00:24	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	200b288ddf16ccbec6edc401ea1417ee8e9d9c2c	RobotArm_v5.0.fmu	2021-15-05 15:53:06	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
+--##	EXPORT	b6962592bf57000540bba192501abe00825b2076	RobotArm_v5.0.fmu	2021-15-05 15:23:40	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
 --##	EXPORT	ce590d8cfdcdc1b0d81812b520435d2432e56a9e	RobotArm_v5.0.fmu	2021-15-05 14:35:21	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
 --##	EXPORT	fa32cd478af83489c2e0f029da4bf8f9068097fa	RobotArm_v5.0.fmu	2021-15-05 14:33:13	tool-wrapper	{"name":"fmu-import-export","version":"0.2.20"}
 class HardwareInterface
@@ -12,9 +54,9 @@ values
 	-- @ interface: type = parameter, name="ctlActive";
 	public ctlActive : BoolPort = new BoolPort(true);
 	-- @ interface: type = parameter, name="Kp";
-	public Kp : RealPort = new RealPort(1.5);
+	public Kp : RealPort = new RealPort(3.0);--1.5
 	-- @ interface: type = parameter, name="Kd";
-	public Kd : RealPort = new RealPort(0.01);
+	public Kd : RealPort = new RealPort(1.0);--0.01
 
 instance variables
 	-- @ interface: type = output, name="torque";
@@ -23,7 +65,7 @@ instance variables
 	public angle : RealPort := new RealPort(0.0);
 	-- @ interface: type = input, name="e";
 	public e : RealPort := new RealPort(0.0);
-	-- @ interface: type = input, name="vel";
-	public vel : RealPort := new RealPort(1.0);
+	-- @ interface: type = input, name="e_prime";
+	public e_prime : RealPort := new RealPort(0.0);
 
 end HardwareInterface
