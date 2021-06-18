@@ -1,0 +1,13 @@
+class Controller
+
+operations
+
+public inc : () ==> ()
+inc() == duration(0) (
+	MySystem`env.increment();
+);
+
+thread
+	-- arguments: period, jitter, delay, offset
+	periodic(1, 0, 0, 0)(inc);
+end Controller

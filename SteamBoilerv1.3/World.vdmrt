@@ -1,0 +1,125 @@
+class World
+
+instance variables
+	io : IO := new IO();
+
+operations
+	
+	public echoLabels : () ==> ()
+	echoLabels() == (
+		dcl str : seq of char := "inst\tenv_qe\tenv_p\tenv_v\tctl_qe\tctl_p\tctl_v\n";
+		def - = io.echo(str) in skip;
+	);
+	
+	public echoState : (nat) ==> ()
+	echoState(counter) == (
+		dcl str : seq of char := "";
+		str := str ^ VDMUtil`val2seq_of_char[nat](counter);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[nat](
+			MySystem`boiler.env_qe);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`boiler.env_pump_state);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`boiler.env_valve_state);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`controller.ctl_qe);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[nat](
+			MySystem`controller.ctl_pump_state);
+		str := str ^ "\t";
+		str := str ^ VDMUtil`val2seq_of_char[real](
+			MySystem`controller.ctl_valve_state);
+		str := str ^ "\n";
+		def - = io.echo(str) in skip;
+	);
+
+	public Scenario1 : () ==> bool
+	Scenario1() == (
+		echoLabels();
+		echoState(0);
+		MySystem`controller.ValveOn();
+		echoState(1);
+		MySystem`boiler.Step(5);
+		echoState(2);
+		MySystem`controller.MonitorWaterQuantity();
+		echoState(3);
+		MySystem`controller.EnsureSafeWaterQuantity();
+		echoState(4);
+		MySystem`boiler.Step(20);
+		echoState(5);
+		MySystem`controller.MonitorWaterQuantity();
+		echoState(6);
+		MySystem`controller.EnsureSafeWaterQuantity();
+		echoState(7);
+		return true;
+	);
+	
+	public Scenario2 : () ==> bool
+	Scenario2() == (
+		echoLabels();
+		echoState(0);
+		MySystem`controller.PumpOn();
+		echoState(1);
+		MySystem`boiler.Step(11);
+		echoState(2);
+		MySystem`controller.MonitorWaterQuantity();
+		echoState(3);
+		MySystem`controller.EnsureSafeWaterQuantity();
+		echoState(4);
+		MySystem`boiler.Step(3);
+		echoState(5);
+		MySystem`controller.MonitorWaterQuantity();
+		echoState(6);
+		MySystem`controller.EnsureSafeWaterQuantity();
+		echoState(7);
+		return true;
+	);
+
+--	public Scenario1 : () ==> bool
+--	Scenario1() == (
+--		MySystem`boiler.ValveOn();
+--		MySystem`boiler.Step(2);
+--		MySystem`boiler.Step(7.5);
+--		MySystem`boiler.Step(5);
+--		return true;
+--	);
+--	
+--	public Scenario2 : () ==> bool
+--	Scenario2() == (
+--		MySystem`boiler.PumpOn();
+--		MySystem`boiler.Step(2);
+--		MySystem`boiler.Step(7.5);
+--		MySystem`boiler.Step(50);
+--		return true;
+--	);
+--	
+--	public Scenario3 : () ==> bool
+--	Scenario3() == (
+--		MySystem`boiler.ValveOn();
+--		MySystem`boiler.Step(3); -- N1 = 400
+--		MySystem`boiler.ValveOff();
+--		MySystem`boiler.PumpOn();
+--		MySystem`boiler.Step(26); -- N2 = 600
+--		MySystem`boiler.PumpOff();
+--		MySystem`boiler.ValveOn();
+--		MySystem`boiler.Step(3);
+--		MySystem`boiler.ValveOff();
+--		return true;
+--	);
+--	
+--	
+--	public Scenario4 : () ==> bool
+--	Scenario4() == (
+--		MySystem`boiler.Step(450);
+--		MySystem`boiler.PumpOn();
+--		MySystem`boiler.Step(50); -- OK here, qe = 1000
+--		MySystem`boiler.Step(1); -- Error 4072: Postcondition failure: post_Step in 'Steam_Boiler'
+--		return true;
+--	);
+	
+
+end World

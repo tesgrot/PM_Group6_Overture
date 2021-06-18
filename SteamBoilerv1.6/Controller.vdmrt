@@ -1,0 +1,57 @@
+class Controller
+instance variables
+
+	public ctl_qe	:	real; -- kg, current water quantity in boiler
+	public ctl_pump_state		:	Steam_Boiler`PumpState; -- 1=open, 0=closed
+	public ctl_valve_state	:	Steam_Boiler`ValveState; -- 1=running, 0=stopped
+	
+operations
+	public Controller: () ==> Controller
+	Controller() == (
+		ctl_qe := 500;
+		ctl_valve_state := <Closed>;
+		ctl_pump_state := <Off>;
+	);
+	
+	public SetValveState: (Steam_Boiler`ValveState) ==> ()
+	SetValveState(s) == duration (1E8) (
+	ctl_valve_state := s;
+	MySystem`env.SetValveState(s);
+	);
+	
+	public SetPumpState: (Steam_Boiler`PumpState) ==> ()
+	SetPumpState(s) == duration (1E8) (
+	ctl_pump_state := s;
+	MySystem`env.SetPumpState(s);
+	);
+		
+	public MonitorWaterQuantity: () ==> ()
+	MonitorWaterQuantity() == duration (1E8) (
+		ctl_qe := MySystem`env.WaterQuantity();
+	);
+		
+	public EnsureSafeWaterQuantity: () ==> ()
+	EnsureSafeWaterQuantity() == duration (5E8) (
+		if(ctl_qe < MySystem`env.N1) then (
+			SetValveState(<Closed>);
+			SetPumpState(<On>);
+		) else if (ctl_qe > MySystem`env.N2) then (
+			SetValveState(<Open>);
+			SetPumpState(<Off>);
+		) else (
+			SetValveState(<Closed>);
+			SetPumpState(<Off>);
+		)
+	);
+	
+	private Loop : () ==> ()
+	Loop() == (
+		MonitorWaterQuantity();
+		EnsureSafeWaterQuantity();
+	);
+	
+thread
+	-- Controller monitors and controls boiler periodically (detects changes rather late)
+	periodic(5E9, 0, 0, 0)(Loop);
+		
+end Controller

@@ -1,0 +1,31 @@
+system MySystem
+
+instance variables
+
+	public static arm:Robot_Arm := new Robot_Arm();
+	public static controller:Robot_Controller := new Robot_Controller();
+	public static motor:Motor := new Motor();
+	public static sensor:AngleSensor := new AngleSensor();
+	
+	cpu1 : CPU := new CPU(<FP>, 1E9);
+	cpu2 : CPU := new CPU(<FP>, 1E9);
+	cpu3 : CPU := new CPU(<FP>, 1E9);
+	cpu4 : CPU := new CPU(<FP>, 1E9);
+
+	bus1 : BUS := new BUS(<CSMACD>, 1E100, {cpu1, cpu2});
+	bus2 : BUS := new BUS(<CSMACD>, 1E100, {cpu1, cpu3});
+	bus3 : BUS := new BUS(<CSMACD>, 1E100, {cpu2, cpu4});
+	bus4 : BUS := new BUS(<CSMACD>, 1E100, {cpu3, cpu4});
+	
+operations
+	public MySystem: () ==> MySystem
+	MySystem() == (
+		cpu1.deploy(arm);
+		cpu2.deploy(sensor);
+		cpu3.deploy(motor);
+		cpu4.deploy(controller);
+skip;
+	);
+
+end MySystem
+

@@ -1,0 +1,47 @@
+class Steam_Boiler
+
+instance variables
+
+--	now : real;
+	public env_qe	:	real; -- kg, current water quantity in boiler
+	public env_pump_state		:	nat; -- 1=open, 0=closed
+	public env_valve_state	:	nat; -- 1=running, 0=stopped
+
+values
+
+	C	: real = 1000; -- kg, max water capacity of steam boiler
+	P	:	real = 10; -- kg/second, pump throughput
+	V	:	real = 50; -- kg/second, valve throughput
+	
+	public N1: real = 400; -- kg, safe water quantity interval
+	public N2: real = 600;
+
+operations
+
+	public Steam_Boiler: () ==> Steam_Boiler
+	Steam_Boiler() == (
+--		now := 0;
+		env_qe	:= 500;
+		env_valve_state	:= 0;
+		env_pump_state	:= 0;
+	);
+	
+	-- evolution of water level
+	public Step: (real) ==> ()
+	Step(time_factor) == duration (0) (
+		
+		--COMPUTE NEW VALUES AFTER DELTA TIME UNITS HAVE PASSED
+		-- time_factor assumed to be in seconds
+		dcl dqe : real := (env_pump_state * P) - (env_valve_state * V);
+		env_qe := env_qe + dqe * time_factor;
+		
+--		now := now + delta;
+		
+		-- boundary condition: take the max of next_qe and 0,
+		-- the boiler can at most be empty
+		if(env_qe < 0) then (env_qe := 0); -- boiler empty
+		
+	)
+	post 0 <= env_qe and env_qe <= C;
+
+end Steam_Boiler

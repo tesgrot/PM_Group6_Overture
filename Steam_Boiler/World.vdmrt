@@ -1,0 +1,34 @@
+class World
+
+operations
+
+	public Scenario1 : () ==> bool
+	Scenario1() == (
+		MySystem`boiler.ValveOn();
+		MySystem`boiler.Step(2);
+		MySystem`boiler.Step(7.5);
+		MySystem`boiler.Step(5);
+		return true;
+	);
+	
+	public Scenario2 : () ==> bool
+	Scenario2() == (
+		MySystem`boiler.PumpOn();
+		MySystem`boiler.Step(2);
+		MySystem`boiler.Step(7.5);
+		MySystem`boiler.Step(50);
+		return true;
+	);
+	
+	public Scenario3 : () ==> bool
+	Scenario3() == (
+		MySystem`boiler.PumpOn();
+		MySystem`boiler.Step(11); -- N2 = 600
+		MySystem`boiler.PumpOff();
+		MySystem`boiler.ValveOn();
+		MySystem`boiler.Step(3);
+		MySystem`boiler.ValveOff();
+		return true;
+	);
+
+end World

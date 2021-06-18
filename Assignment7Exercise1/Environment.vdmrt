@@ -1,0 +1,27 @@
+class Environment
+
+instance variables
+
+	public data : int;
+	public data_history : seq of (real * int);
+
+operations
+
+	public Environment : () ==> Environment
+	Environment() == (
+		data := 0;
+		data_history := [];
+	);
+	
+	public increment : () ==> ()
+	increment() == duration(0) (
+		data := data + 1;
+		recordState();
+	);
+	
+	public recordState : () ==> ()
+	recordState() == duration(0) (
+		data_history := data_history ^ [mk_(time, data)];
+	);
+
+end Environment

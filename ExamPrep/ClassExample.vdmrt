@@ -1,0 +1,30 @@
+class ClassExample
+types
+-- TODO Define types here
+values
+-- TODO Define values here
+instance variables
+-- 
+	int_list : seq of int; -- sequence of integers
+	real_list : seq of real; -- sequence of real numbers
+	nat_list : seq of nat; -- sequence of natural numberss
+	empty_list : seq of int;
+	
+operations
+-- like functions, they have declarations and definitions
+
+-- constructor - special kind of operation - name=class name, takes no input, returns instance of class
+	public ClassExample : () ==> ClassExample			-- declaration; like mapping function
+-- 								(no)input		returned output
+	ClassExample() == (														-- definition
+		int_list := [-3, 0, 1, 2, 3];
+		real_list := [-3.2, 1.0, 2.2, 3.3];
+		nat_list := [1, 2, 3, 4, 5];
+		empty_list := [];
+	);
+	
+functions
+-- TODO Define functions here
+traces
+-- TODO Define Combinatorial Test Traces here
+end ClassExample

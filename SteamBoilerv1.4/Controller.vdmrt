@@ -1,0 +1,59 @@
+class Controller
+instance variables
+
+	public ctl_qe	:	real; -- kg, current water quantity in boiler
+	public ctl_pump_state		:	nat; -- 1=open, 0=closed
+	public ctl_valve_state	:	nat; -- 1=running, 0=stopped
+	
+operations
+	public Controller: () ==> Controller
+	Controller() == (
+		ctl_qe := 500;
+		ctl_valve_state := 0;
+		ctl_pump_state := 0;
+	);
+
+	public ValveOn: () ==> ()
+	ValveOn() == duration (0) (
+		ctl_valve_state := 1;
+		MySystem`env.ValveOn();
+	);
+		
+	public ValveOff: () ==> ()
+	ValveOff() == duration (0) (
+		ctl_valve_state := 0;
+		MySystem`env.ValveOff();
+	);
+		
+	public PumpOn: () ==> ()
+	PumpOn() == duration (0) (
+		ctl_pump_state := 1;
+		MySystem`env.PumpOn();
+	);
+		
+	public PumpOff: () ==> ()
+	PumpOff() == duration (0) (
+		ctl_pump_state := 0;
+		MySystem`env.PumpOff();
+	);
+		
+	public MonitorWaterQuantity: () ==> ()
+	MonitorWaterQuantity() == duration (0) (
+		ctl_qe := MySystem`env.WaterQuantity();
+	);
+		
+	public EnsureSafeWaterQuantity: () ==> ()
+	EnsureSafeWaterQuantity() == duration (0) (
+		if(ctl_qe < MySystem`env.N1) then (
+			ValveOff();
+			PumpOn();
+		) else if (ctl_qe > MySystem`env.N2) then (
+			ValveOn();
+			PumpOff();
+		) else (
+			ValveOff();
+			PumpOff();
+		)
+	);
+		
+end Controller

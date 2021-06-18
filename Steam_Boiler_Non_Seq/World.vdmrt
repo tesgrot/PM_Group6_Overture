@@ -1,0 +1,50 @@
+class World
+
+values
+
+operations
+
+	public Scenario1 : () ==> bool
+	Scenario1() == (
+		MySystem`boiler.ValveOn();
+		MySystem`boiler.Step(2);
+		MySystem`boiler.Step(7.5);
+		MySystem`boiler.Step(5);
+		return true;
+	);
+	
+	public Scenario2 : () ==> bool
+	Scenario2() == (
+		MySystem`boiler.PumpOn();
+		MySystem`boiler.Step(2);
+		MySystem`boiler.Step(7.5);
+		MySystem`boiler.Step(50);
+		return true;
+	);
+	
+	public Scenario3 : () ==> bool
+	Scenario3() == (
+		MySystem`boiler.ValveOn();
+		MySystem`boiler.Step(3); -- N1 = 400
+		MySystem`boiler.ValveOff();
+		MySystem`boiler.PumpOn();
+		MySystem`boiler.Step(26); -- N2 = 600
+		MySystem`boiler.PumpOff();
+		MySystem`boiler.ValveOn();
+		MySystem`boiler.Step(3);
+		MySystem`boiler.ValveOff();
+		return true;
+	);
+	
+	
+	public Scenario4 : () ==> bool
+	Scenario4() == (
+		MySystem`boiler.Step(450);
+		MySystem`boiler.PumpOn();
+		MySystem`boiler.Step(50); -- OK here, qe = 1000
+		MySystem`boiler.Step(1); -- Error 4072: Postcondition failure: post_Step in 'Steam_Boiler'
+		return true;
+	);
+	
+
+end World

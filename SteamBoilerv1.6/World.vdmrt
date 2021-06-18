@@ -1,0 +1,35 @@
+class World
+
+instance variables
+	io : IO := new IO();
+
+operations
+
+	public RunScenario1 : () ==> (seq of (real * real * real * Steam_Boiler`PumpState * Steam_Boiler`ValveState * real))
+	RunScenario1() == (
+		MySystem`env.SetFinalSimulationTime(36E9);
+		MySystem`env.env_qe := 100;
+		
+		start(MySystem`ctl);
+		start(MySystem`env);
+		
+		MySystem`env.isFinished();
+		
+		return MySystem`env.state_history;
+	);
+	
+--	the turning point (when controller notices levels are too low) is at 352 (EnsureSafeWaterQuantity duration * V(alve throughput) = 5*50)
+	public Scenario2 : () ==> (seq of (real * real * real * Steam_Boiler`PumpState * Steam_Boiler`ValveState * real))
+	Scenario2() == (
+		MySystem`env.SetWaterStabilisedDuration(5);
+		MySystem`env.env_qe := 602;
+		
+		start(MySystem`ctl);
+		start(MySystem`env);
+		
+		MySystem`env.WaterHasStabilised();
+		
+		return MySystem`env.state_history;
+	);
+	
+end World

@@ -1,0 +1,7 @@
+system MySystem
+
+instance variables
+
+	public static boiler:Steam_Boiler := new Steam_Boiler();
+
+end MySystem

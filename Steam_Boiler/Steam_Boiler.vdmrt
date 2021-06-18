@@ -1,0 +1,84 @@
+class Steam_Boiler
+
+instance variables
+
+	now	:	seq of real; -- time
+	qe	:	seq of real; -- kg, current water quantity in boiler
+	public pump_state		:	seq of nat; -- 1=open, 0=closed
+	public valve_state	:	seq of nat; -- 1=running, 0=stopped
+
+values
+
+	C	: real = 1000; -- kg, max water capacity of steam boiler
+	P	:	real = 10; -- kg/second, pump throughput
+	V	:	real = 50; -- kg/second, valve throughput
+
+operations
+
+	public Steam_Boiler: () ==> Steam_Boiler
+	Steam_Boiler() == (
+		now	:= [0];
+		qe	:= [500];
+		valve_state	:= [0];
+		pump_state	:= [0];
+	);
+	-- setters (executed instanteneously; time is not advanced
+	public ValveOn: () ==> ()
+	ValveOn() == duration (0) (
+		valve_state := [1] ^ valve_state;
+		now := [hd now] ^ now;
+		qe := [hd qe] ^ qe;
+		pump_state := [hd pump_state] ^ pump_state;
+	);
+	
+	public ValveOff: () ==> ()
+	ValveOff() == duration (0) (
+		valve_state := [0] ^ valve_state;
+		now := [hd now] ^ now;
+		qe := [hd qe] ^ qe;
+		pump_state := [hd pump_state] ^ pump_state;
+	);
+	
+	public PumpOn: () ==> ()
+	PumpOn() == duration (0) (
+		pump_state := [1] ^ pump_state;
+		now := [hd now] ^ now;
+		qe := [hd qe] ^ qe;
+		valve_state := [hd valve_state] ^ valve_state;
+	);
+	
+	public PumpOff: () ==> ()
+	PumpOff() == duration (0) (
+		pump_state := [0] ^ pump_state;
+		now := [hd now] ^ now;
+		qe := [hd qe] ^ qe;
+		valve_state := [hd valve_state] ^ valve_state;
+	);
+	
+	-- evolution of water level
+	public Step: (real) ==> ()
+	Step(delta) == duration (0) (
+		
+		-- FETCH VALUES
+		dcl current_qe : real := hd qe;
+		dcl current_pump_state : real := hd pump_state;
+		dcl current_valve_state : real := hd valve_state;
+		
+		--COMPUTE NEW VALUES AFTER DELTA TIME UNITS HAVE PASSED
+		-- time_factor assumed to be in seconds
+		dcl delta_qe : real := (current_pump_state * P) - (current_valve_state * V);
+		dcl next_qe : real := current_qe + delta_qe * delta;
+		
+		-- boundary condition: take the max of next_qe and 0,
+		-- the boiler can at most be empty
+		if(next_qe < 0) then (next_qe := 0); -- boiler empty
+		
+		-- SET NEW VALUES, ADVANCE TIME
+		qe := [next_qe] ^ qe;
+		now := [hd now + delta] ^ now;
+		valve_state := [hd valve_state] ^ valve_state;
+		pump_state := [hd pump_state] ^ pump_state;
+	)
+	post 0 <= hd qe and hd qe <= C;
+
+end Steam_Boiler

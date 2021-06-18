@@ -1,0 +1,16 @@
+class World
+
+operations
+
+	public RunScenario1 : () ==> (int)
+	RunScenario1() == (
+		start(MySystem`ctl);
+		
+		duration(10) skip;
+		duration(10) skip;
+		duration(10) skip;
+		
+		return MySystem`env.data;
+	);
+	
+end World

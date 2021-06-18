@@ -1,0 +1,66 @@
+class OpDurations
+
+instance variables
+	io : IO := new IO();
+
+operations
+
+	public Op1: () ==> ()
+	Op1() == (
+		dcl str : seq of char := "";
+		duration (10) skip;
+		duration (10) skip;
+		str := str ^ VDMUtil`val2seq_of_char[real](time);
+		def - = io.echo(str) in skip;
+	);--20
+
+	public Op2: () ==> ()
+	Op2() == (
+		dcl str : seq of char := "";
+		duration (10) (
+			duration (20) skip;
+		);
+		str := str ^ VDMUtil`val2seq_of_char[real](time);
+		def - = io.echo(str) in skip;
+	);--10
+
+	public Op3: () ==> ()
+	Op3() == duration (10) (
+		skip;
+	);--0 (makes sense, because it's within the function. To see real time value,
+	--we must print time after the function was called
+	
+	public ScenarioOp3 : () ==> seq of char
+	ScenarioOp3() == (
+		dcl str : seq of char := "";
+		Op3();
+		str := str ^ VDMUtil`val2seq_of_char[real](time);
+		def - = io.echo(str) in skip;
+		return str;
+	);--10
+	
+	public Op4 : () ==> ()
+	Op4() == (
+		dcl str : seq of char := "";
+		Op3();
+		Op3();
+		str := str ^ VDMUtil`val2seq_of_char[real](time);
+		def - = io.echo(str) in skip;
+	);--20
+	
+	public Op5 : () ==> ()
+	Op5() == duration (10) (
+		Op3();
+		Op3();
+	);--0 - duration statement "overrided" the durations of Op3
+	
+	public ScenarioOp5 : () ==> seq of char
+	ScenarioOp5() == (
+		dcl str : seq of char := "";
+		Op5();
+		str := str ^ VDMUtil`val2seq_of_char[real](time);
+		def - = io.echo(str) in skip;
+		return str;
+	);--10
+	
+end OpDurations

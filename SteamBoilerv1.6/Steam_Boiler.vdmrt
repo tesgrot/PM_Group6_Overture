@@ -1,0 +1,142 @@
+class Steam_Boiler
+
+types
+	public ValveState = <Open> | <Closed>;
+	public PumpState = <On> | <Off>;
+
+instance variables
+
+	public env_qe	:	real; -- kg, current water quantity in boiler
+	public env_pump_state		:	PumpState;
+	public env_valve_state	:	ValveState;
+	public last_time : real;
+	public last_qe : real;
+	public final_sim_time : real;
+	public state_history : seq of (real * real * real * PumpState * ValveState * real);
+	public d : real; -- duration for checking if water is stabilised
+	public presetD : real;
+
+values
+
+	C	: real = 1000; -- kg, max water capacity of steam boiler
+	P	:	real = 10; -- kg/second, pump throughput
+	V	:	real = 50; -- kg/second, valve throughput
+	
+	public N1: real = 400; -- kg, safe water quantity interval
+	public N2: real = 600;
+
+operations
+
+	public Steam_Boiler: () ==> Steam_Boiler
+	Steam_Boiler() == (
+		env_qe	:= 500;
+		last_qe := 0;
+		env_valve_state	:= <Closed>;
+		env_pump_state	:= <Off>;
+		last_time := 0;
+		final_sim_time := 0;
+		state_history := [];
+		d := 10;
+		presetD := d;
+	);
+	
+	public recordState : () ==> ()
+	recordState() == duration(0) (
+		state_history := state_history ^ [mk_(time/1E9, env_qe, last_qe, env_pump_state, env_valve_state, d)];
+	);
+	
+	public isFinished : () ==> ()
+	isFinished() == skip;
+	
+	public WaterHasStabilised : () ==> ()
+	WaterHasStabilised() == skip;
+	
+	public SetFinalSimulationTime : (real) ==> ()
+	SetFinalSimulationTime(t) == (
+		final_sim_time := t;
+	);
+	
+	public SetWaterStabilisedDuration : (real) ==> ()
+	SetWaterStabilisedDuration(dur) == (
+		presetD := dur;
+		d := presetD;
+	);
+	
+	public CheckWaterStability : () ==> ()
+	CheckWaterStability() == duration (0) (
+		if last_qe = env_qe then
+			d := d - 1 -- maybe subtract delta value (real time passed) instead of 1
+		else (
+			last_qe := env_qe;
+			d := presetD;
+		)
+	);
+	
+	public SetValveState: (ValveState) ==> ()
+	SetValveState(s) == duration (5E8) (
+		env_valve_state := s;
+	);
+		
+	public SetPumpState: (PumpState) ==> ()
+	SetPumpState(s) == duration (5E8) (
+		env_pump_state := s;
+	);
+	
+	public WaterQuantity: () ==> (real)
+	WaterQuantity() == duration (1E8) (
+		return env_qe;
+	);
+	
+	public GetValveState: () ==> (ValveState)
+	GetValveState() == duration(1E8) (
+		return env_valve_state;
+	);
+	
+	public GetPumpState: () ==> (PumpState)
+	GetPumpState() == duration(1E8) (
+		return env_pump_state;
+	);
+		
+	-- evolution of water level
+	public Step: () ==> ()
+	Step() == duration (0) (
+	
+		-- delta is in seconds
+		dcl t : real := time / 1E9;
+		dcl delta : real := (t - last_time);
+
+		dcl ps : nat := 0;
+		dcl vs : nat := 0;
+		dcl dqe : real := 0;
+		
+		last_time := t;
+		
+		if env_pump_state = <On> then ps := 1;
+		if env_valve_state = <Open> then vs := 1;
+		
+		--COMPUTE NEW VALUES AFTER DELTA TIME UNITS HAVE PASSED
+		-- time_factor assumed to be in seconds
+		
+		dqe := (ps * P) - (vs * V);
+		
+		env_qe := env_qe + dqe * delta;
+		
+		recordState();
+		
+		CheckWaterStability();
+		
+		-- boundary condition: take the max of next_qe and 0,
+		-- the boiler can at most be empty
+		if(env_qe < 0) then (env_qe := 0); -- boiler empty
+		
+	)
+	post 0 <= env_qe and env_qe <= C;
+	
+sync
+	per WaterHasStabilised => (d <= 0);
+	per isFinished => (time > final_sim_time);
+	
+thread
+	periodic(1E8, 0, 0, 0)(Step);
+
+end Steam_Boiler
